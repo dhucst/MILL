@@ -1,0 +1,14 @@
+{
+  "name": "MILL",
+  "version": "0.0.1",
+  "description": "Platform and toolchain for labelling medical images.",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "opn": "^5.4.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
