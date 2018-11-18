@@ -46,20 +46,18 @@ class App extends Component {
       const pathFirstPoint = lastItem.path[0];
       const pathLastPoint = lastItem.path[pointLen - 1];
 
-      console.log("pointLen", pointLen);
-      console.log("pathFirstPoint", pathFirstPoint);
-      console.log("pathLastPoint", pathLastPoint);
+      // pre-close for drawing
+      lastItem.set("fill", "#000");
+      that.canvas.renderAll();
 
       /*
        * There are many circumstances need judge
-       * image force left/right contain: direction = 'left' | 'right'
-       * & image force contain face = 1 | 2 | 3 | 4
        * & tolerate 5px error
        * & four area
        */
 
       /*
-       * In the first area
+       * In the lef-top area
        *
        */
 
@@ -69,11 +67,6 @@ class App extends Component {
       let y2 = that.img.leftTopPoint.top;
       let x3 = pathLastPoint[1];
       let y3 = pathLastPoint[2];
-      console.log(x1, y1);
-      console.log(x2, y2);
-      console.log(x3, y3);
-      lastItem.set("fill", "#000");
-      that.canvas.renderAll();
       if (
         Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <=
           Math.pow(that.img.width / 2, 2) &&
@@ -107,7 +100,6 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (rightPoint.top - y2 <= 5 && leftPoint.left - x2 <= 5) {
-          console.log("hello");
           const pathContent = `M ${handledFirstPoint.left} ${
             handledFirstPoint.top
           } L ${crossPoint.left} ${crossPoint.top} L ${handledLastPoint.left} ${
@@ -122,6 +114,176 @@ class App extends Component {
           that.canvas.add(groupPath);
           that.canvas.renderAll();
         }
+
+        return;
+      }
+
+      /*
+       * In the right-top area
+       *
+       */
+      x2 = that.img.rightTopPoint.left;
+      y2 = that.img.rightTopPoint.top;
+      if (
+        Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2) &&
+        Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2)
+      ) {
+        // handle two point let it into the image
+        const handledFirstPoint = {
+          left: x1 > x2 ? x2 : x1,
+          top: y1 < y2 ? y2 : y1
+        };
+        const handledLastPoint = {
+          left: x3 > x2 ? x2 : x3,
+          top: y3 < y2 ? y2 : y3
+        };
+        const crossPoint = {
+          left: Math.max(handledFirstPoint.left, handledLastPoint.left),
+          top: Math.min(handledFirstPoint.top, handledLastPoint.top)
+        };
+
+        // For convenient calculate
+        let leftPoint = null;
+        let rightPoint = null;
+        if (handledFirstPoint.left > handledLastPoint.left) {
+          leftPoint = handledLastPoint;
+          rightPoint = handledFirstPoint;
+        } else {
+          leftPoint = handledFirstPoint;
+          rightPoint = handledLastPoint;
+        }
+
+        // if vertical, is special circumstance, start drawing path and group path
+        if (leftPoint.top - y2 <= 5 && x2 - rightPoint.left <= 5) {
+          const pathContent = `M ${handledFirstPoint.left} ${
+            handledFirstPoint.top
+          } L ${crossPoint.left} ${crossPoint.top} L ${handledLastPoint.left} ${
+            handledLastPoint.top
+          }`;
+          const newPath = new fabric.Path(pathContent);
+          const groupPath = new fabric.Group([newPath, lastItem]);
+          lastItem.set("fill", "#000");
+          groupPath.set("fill", "#000");
+          that.canvas.remove(lastItem);
+          that.canvas.add(groupPath);
+          that.canvas.renderAll();
+        }
+
+        return;
+      }
+
+      /*
+       * In the left-bottom area
+       *
+       */
+      x2 = that.img.leftBottomPoint.left;
+      y2 = that.img.leftBottomPoint.top;
+      if (
+        Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2) &&
+        Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2)
+      ) {
+        // handle two point let it into the image
+        const handledFirstPoint = {
+          left: x1 < x2 ? x2 : x1,
+          top: y1 > y2 ? y2 : y1
+        };
+        const handledLastPoint = {
+          left: x3 < x2 ? x2 : x3,
+          top: y3 > y2 ? y2 : y3
+        };
+        const crossPoint = {
+          left: Math.min(handledFirstPoint.left, handledLastPoint.left),
+          top: Math.max(handledFirstPoint.top, handledLastPoint.top)
+        };
+
+        // For convenient calculate
+        let leftPoint = null;
+        let rightPoint = null;
+        if (handledFirstPoint.left > handledLastPoint.left) {
+          leftPoint = handledLastPoint;
+          rightPoint = handledFirstPoint;
+        } else {
+          leftPoint = handledFirstPoint;
+          rightPoint = handledLastPoint;
+        }
+
+        // if vertical, is special circumstance, start drawing path and group path
+        if (leftPoint.left - x2 <= 5 && y2 - rightPoint.top <= 5) {
+          const pathContent = `M ${handledFirstPoint.left} ${
+            handledFirstPoint.top
+          } L ${crossPoint.left} ${crossPoint.top} L ${handledLastPoint.left} ${
+            handledLastPoint.top
+          }`;
+          const newPath = new fabric.Path(pathContent);
+          const groupPath = new fabric.Group([newPath, lastItem]);
+          lastItem.set("fill", "#000");
+          groupPath.set("fill", "#000");
+          that.canvas.remove(lastItem);
+          that.canvas.add(groupPath);
+          that.canvas.renderAll();
+        }
+
+        return;
+      }
+
+      /*
+       * In the right-bottom area
+       *
+       */
+      x2 = that.img.rightBottomPoint.left;
+      y2 = that.img.rightBottomPoint.top;
+      if (
+        Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2) &&
+        Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
+          Math.pow(that.img.width / 2, 2)
+      ) {
+        // handle two point let it into the image
+        const handledFirstPoint = {
+          left: x1 > x2 ? x2 : x1,
+          top: y1 > y2 ? y2 : y1
+        };
+        const handledLastPoint = {
+          left: x3 > x2 ? x2 : x3,
+          top: y3 > y2 ? y2 : y3
+        };
+        const crossPoint = {
+          left: Math.max(handledFirstPoint.left, handledLastPoint.left),
+          top: Math.max(handledFirstPoint.top, handledLastPoint.top)
+        };
+
+        // For convenient calculate
+        let leftPoint = null;
+        let rightPoint = null;
+        if (handledFirstPoint.left > handledLastPoint.left) {
+          leftPoint = handledLastPoint;
+          rightPoint = handledFirstPoint;
+        } else {
+          leftPoint = handledFirstPoint;
+          rightPoint = handledLastPoint;
+        }
+
+        // if vertical, is special circumstance, start drawing path and group path
+        if (y2 - leftPoint.top <= 5 && x2 - rightPoint.left <= 5) {
+          const pathContent = `M ${handledFirstPoint.left} ${
+            handledFirstPoint.top
+          } L ${crossPoint.left} ${crossPoint.top} L ${handledLastPoint.left} ${
+            handledLastPoint.top
+          }`;
+          const newPath = new fabric.Path(pathContent);
+          const groupPath = new fabric.Group([newPath, lastItem]);
+          lastItem.set("fill", "#000");
+          groupPath.set("fill", "#000");
+          that.canvas.remove(lastItem);
+          that.canvas.add(groupPath);
+          that.canvas.renderAll();
+        }
+
+        return;
       }
     });
   }
