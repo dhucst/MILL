@@ -1,9 +1,18 @@
 .App {
-  display: flex;
   width: 100%;
   height: 100vh;
+  display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.canvasContainer {
+  width: 100%;
+  margin: 50px 0;
+}
+
+.toolContainer {
+  width: 100%;
 }
 
 #MILL {
