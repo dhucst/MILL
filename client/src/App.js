@@ -15,26 +15,28 @@ class App extends Component {
       top: 75,
     },
     rightTopPoint: {
-      left: 75 + 250,
+      left: 75 + 500,
       top: 75,
     },
     leftBottomPoint: {
       left: 75,
-      top: 75 + 250,
+      top: 75 + 500,
     },
     rightBottomPoint: {
-      left: 75 + 250,
-      top: 75 + 250,
+      left: 75 + 500,
+      top: 75 + 500,
     },
     tolerance: 5,
   };
   componentDidMount() {
     this.canvas = new fabric.Canvas('MILL', {
-      width: 400,
-      height: 400,
+      width: 500,
+      height: 500,
       backgroundColor: '#eee',
     });
-    this.canvas.add();
+
+    this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
+    this.canvas.freeDrawingBrush.color = '#0f0';
 
     const that = this;
     this.canvas.on('mouse:up', function(options) {
@@ -48,7 +50,7 @@ class App extends Component {
       const pathLastPoint = lastItem.path[pointLen - 1];
 
       // pre-close for drawing
-      lastItem.set('fill', '#000');
+      lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
       that.canvas.renderAll();
 
       /*
@@ -109,8 +111,8 @@ class App extends Component {
           console.log('path', pathContent);
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set('fill', '#000');
-          groupPath.set('fill', '#000');
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
+          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -165,8 +167,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set('fill', '#000');
-          groupPath.set('fill', '#000');
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
+          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -221,8 +223,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set('fill', '#000');
-          groupPath.set('fill', '#000');
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
+          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -277,8 +279,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set('fill', '#000');
-          groupPath.set('fill', '#000');
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
+          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -298,22 +300,8 @@ class App extends Component {
     reader.addEventListener('load', function() {
       img.src = reader.result;
       img.onload = function() {
-        const imgWidth = (that.img.width = this.width);
-        const imgHeight = (that.img.height = this.height);
-        const canvasWidth = that.canvas.getWidth();
-        const canvasHeight = that.canvas.getHeight();
-
         const image = new fabric.Image(img);
-
-        that.canvas.setBackgroundImage(
-          image,
-          that.canvas.renderAll.bind(that.canvas),
-          {
-            left: (canvasWidth - imgWidth) / 2,
-            top: (canvasHeight - imgHeight) / 2,
-          },
-        );
-        that.canvas.renderAll();
+        that.setBackground(image);
       };
       that.canvas.isDrawingMode = true;
     });
@@ -350,19 +338,18 @@ class App extends Component {
 
     // restore backgroundImage
     const imgDom = document.getElementById('hiddenImg');
-    const imgWidth = this.img.width;
-    const imgHeight = this.img.height;
-    const canvasWidth = this.canvas.getWidth();
-    const canvasHeight = this.canvas.getHeight();
-
     const image = new fabric.Image(imgDom);
 
+    this.setBackground(image);
+  };
+
+  setBackground = image => {
     this.canvas.setBackgroundImage(
       image,
       this.canvas.renderAll.bind(this.canvas),
       {
-        left: (canvasWidth - imgWidth) / 2,
-        top: (canvasHeight - imgHeight) / 2,
+        scaleX: this.canvas.getWidth() / this.img.width,
+        scaleY: this.canvas.getHeight() / this.img.height,
       },
     );
     this.canvas.renderAll();
@@ -379,7 +366,12 @@ class App extends Component {
           {this.state.isDrawingMode ? '进入画图模式' : '进入只读模式'}
         </button>
         <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
-        <a href="" id="downloadImage" download onClick={this.handleSaveImage}>
+        <a
+          href=""
+          id="downloadImage"
+          download="annotation"
+          onClick={this.handleSaveImage}
+        >
           下载图片
         </a>
       </div>
