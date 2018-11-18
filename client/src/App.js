@@ -341,11 +341,30 @@ class App extends Component {
   };
 
   handleSaveImage = () => {
+    // save binary-image
     this.canvas.setBackgroundImage(null);
-    const image = this.canvas.toDataURL("jpg");
-    console.log("downloadImage", downloadImage);
+    const imageURL = this.canvas.toDataURL("jpg");
     const downloadImage = document.getElementById("downloadImage");
-    downloadImage.href = image;
+    downloadImage.href = imageURL;
+
+    // restore backgroundImage
+    const imgDom = document.getElementById("hiddenImg");
+    const imgWidth = this.img.width;
+    const imgHeight = this.img.height;
+    const canvasWidth = this.canvas.getWidth();
+    const canvasHeight = this.canvas.getHeight();
+
+    const image = new fabric.Image(imgDom);
+
+    this.canvas.setBackgroundImage(
+      image,
+      this.canvas.renderAll.bind(this.canvas),
+      {
+        left: (canvasWidth - imgWidth) / 2,
+        top: (canvasHeight - imgHeight) / 2
+      }
+    );
+    this.canvas.renderAll();
   };
 
   render() {
@@ -358,9 +377,8 @@ class App extends Component {
         <button onClick={this.handleToggleRead}>
           {this.state.isDrawingMode ? "进入画图模式" : "进入只读模式"}
         </button>
-        <button onClick={this.handleSaveImage}>保存图片</button>
-        <img src="" alt="" style={{ display: "none" }} />
-        <a href="" id="downloadImage" download>
+        <img src="" alt="" style={{ display: "none" }} id="hiddenImg" />
+        <a href="" id="downloadImage" download onClick={this.handleSaveImage}>
           下载图片
         </a>
       </div>
