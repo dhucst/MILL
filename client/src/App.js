@@ -1,45 +1,46 @@
-import React, { Component } from "react";
-import { fabric } from "fabric";
-import { Button, Upload, Icon, message } from "antd";
+import React, { Component } from 'react';
+import { fabric } from 'fabric';
 
-import "./App.css";
+import './App.css';
 
 class App extends Component {
   state = {
-    isDrawingMode: false
+    isDrawingMode: false,
   };
   img = {
     width: 250,
     height: 250,
     leftTopPoint: {
       left: 75,
-      top: 75
+      top: 75,
     },
     rightTopPoint: {
       left: 75 + 250,
-      top: 75
+      top: 75,
     },
     leftBottomPoint: {
       left: 75,
-      top: 75 + 250
+      top: 75 + 250,
     },
     rightBottomPoint: {
       left: 75 + 250,
-      top: 75 + 250
+      top: 75 + 250,
     },
-    tolerance: 5
+    tolerance: 5,
   };
   componentDidMount() {
-    this.canvas = new fabric.Canvas("MILL", {
+    this.canvas = new fabric.Canvas('MILL', {
       width: 400,
       height: 400,
-      backgroundColor: "#eee"
+      backgroundColor: '#eee',
     });
     this.canvas.add();
 
     const that = this;
-    this.canvas.on("mouse:up", function(options) {
+    this.canvas.on('mouse:up', function(options) {
       const len = that.canvas.getObjects().length;
+
+      if (len === 0) return;
       const lastItem = that.canvas.item(len - 1);
 
       const pointLen = lastItem.path.length;
@@ -47,7 +48,7 @@ class App extends Component {
       const pathLastPoint = lastItem.path[pointLen - 1];
 
       // pre-close for drawing
-      lastItem.set("fill", "#000");
+      lastItem.set('fill', '#000');
       that.canvas.renderAll();
 
       /*
@@ -76,15 +77,15 @@ class App extends Component {
         // handle two point let it into the image
         const handledFirstPoint = {
           left: x1 < x2 ? x2 : x1,
-          top: y1 < y2 ? y2 : y1
+          top: y1 < y2 ? y2 : y1,
         };
         const handledLastPoint = {
           left: x3 < x2 ? x2 : x3,
-          top: y3 < y2 ? y2 : y3
+          top: y3 < y2 ? y2 : y3,
         };
         const crossPoint = {
           left: Math.min(handledFirstPoint.left, handledLastPoint.left),
-          top: Math.min(handledFirstPoint.top, handledLastPoint.top)
+          top: Math.min(handledFirstPoint.top, handledLastPoint.top),
         };
 
         // For convenient calculate
@@ -105,11 +106,11 @@ class App extends Component {
           } L ${crossPoint.left} ${crossPoint.top} L ${handledLastPoint.left} ${
             handledLastPoint.top
           }`;
-          console.log("path", pathContent);
+          console.log('path', pathContent);
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set("fill", "#000");
-          groupPath.set("fill", "#000");
+          lastItem.set('fill', '#000');
+          groupPath.set('fill', '#000');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -133,15 +134,15 @@ class App extends Component {
         // handle two point let it into the image
         const handledFirstPoint = {
           left: x1 > x2 ? x2 : x1,
-          top: y1 < y2 ? y2 : y1
+          top: y1 < y2 ? y2 : y1,
         };
         const handledLastPoint = {
           left: x3 > x2 ? x2 : x3,
-          top: y3 < y2 ? y2 : y3
+          top: y3 < y2 ? y2 : y3,
         };
         const crossPoint = {
           left: Math.max(handledFirstPoint.left, handledLastPoint.left),
-          top: Math.min(handledFirstPoint.top, handledLastPoint.top)
+          top: Math.min(handledFirstPoint.top, handledLastPoint.top),
         };
 
         // For convenient calculate
@@ -164,8 +165,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set("fill", "#000");
-          groupPath.set("fill", "#000");
+          lastItem.set('fill', '#000');
+          groupPath.set('fill', '#000');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -189,15 +190,15 @@ class App extends Component {
         // handle two point let it into the image
         const handledFirstPoint = {
           left: x1 < x2 ? x2 : x1,
-          top: y1 > y2 ? y2 : y1
+          top: y1 > y2 ? y2 : y1,
         };
         const handledLastPoint = {
           left: x3 < x2 ? x2 : x3,
-          top: y3 > y2 ? y2 : y3
+          top: y3 > y2 ? y2 : y3,
         };
         const crossPoint = {
           left: Math.min(handledFirstPoint.left, handledLastPoint.left),
-          top: Math.max(handledFirstPoint.top, handledLastPoint.top)
+          top: Math.max(handledFirstPoint.top, handledLastPoint.top),
         };
 
         // For convenient calculate
@@ -220,8 +221,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set("fill", "#000");
-          groupPath.set("fill", "#000");
+          lastItem.set('fill', '#000');
+          groupPath.set('fill', '#000');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -245,15 +246,15 @@ class App extends Component {
         // handle two point let it into the image
         const handledFirstPoint = {
           left: x1 > x2 ? x2 : x1,
-          top: y1 > y2 ? y2 : y1
+          top: y1 > y2 ? y2 : y1,
         };
         const handledLastPoint = {
           left: x3 > x2 ? x2 : x3,
-          top: y3 > y2 ? y2 : y3
+          top: y3 > y2 ? y2 : y3,
         };
         const crossPoint = {
           left: Math.max(handledFirstPoint.left, handledLastPoint.left),
-          top: Math.max(handledFirstPoint.top, handledLastPoint.top)
+          top: Math.max(handledFirstPoint.top, handledLastPoint.top),
         };
 
         // For convenient calculate
@@ -276,8 +277,8 @@ class App extends Component {
           }`;
           const newPath = new fabric.Path(pathContent);
           const groupPath = new fabric.Group([newPath, lastItem]);
-          lastItem.set("fill", "#000");
-          groupPath.set("fill", "#000");
+          lastItem.set('fill', '#000');
+          groupPath.set('fill', '#000');
           that.canvas.remove(lastItem);
           that.canvas.add(groupPath);
           that.canvas.renderAll();
@@ -292,9 +293,9 @@ class App extends Component {
     const that = this;
     const file = e.target.files[0];
     var reader = new FileReader();
-    var img = document.querySelector("img");
+    var img = document.querySelector('img');
 
-    reader.addEventListener("load", function() {
+    reader.addEventListener('load', function() {
       img.src = reader.result;
       img.onload = function() {
         const imgWidth = (that.img.width = this.width);
@@ -309,8 +310,8 @@ class App extends Component {
           that.canvas.renderAll.bind(that.canvas),
           {
             left: (canvasWidth - imgWidth) / 2,
-            top: (canvasHeight - imgHeight) / 2
-          }
+            top: (canvasHeight - imgHeight) / 2,
+          },
         );
         that.canvas.renderAll();
       };
@@ -336,19 +337,19 @@ class App extends Component {
   handleToggleRead = () => {
     this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
     this.setState({
-      isDrawingMode: this.canvas.isDrawingMode
+      isDrawingMode: this.canvas.isDrawingMode,
     });
   };
 
   handleSaveImage = () => {
     // save binary-image
     this.canvas.setBackgroundImage(null);
-    const imageURL = this.canvas.toDataURL("jpg");
-    const downloadImage = document.getElementById("downloadImage");
+    const imageURL = this.canvas.toDataURL('jpg');
+    const downloadImage = document.getElementById('downloadImage');
     downloadImage.href = imageURL;
 
     // restore backgroundImage
-    const imgDom = document.getElementById("hiddenImg");
+    const imgDom = document.getElementById('hiddenImg');
     const imgWidth = this.img.width;
     const imgHeight = this.img.height;
     const canvasWidth = this.canvas.getWidth();
@@ -361,8 +362,8 @@ class App extends Component {
       this.canvas.renderAll.bind(this.canvas),
       {
         left: (canvasWidth - imgWidth) / 2,
-        top: (canvasHeight - imgHeight) / 2
-      }
+        top: (canvasHeight - imgHeight) / 2,
+      },
     );
     this.canvas.renderAll();
   };
@@ -375,9 +376,9 @@ class App extends Component {
         <button onClick={this.handleUndo}>撤销</button>
         <button onClick={this.handleDelete}>删除标记</button>
         <button onClick={this.handleToggleRead}>
-          {this.state.isDrawingMode ? "进入画图模式" : "进入只读模式"}
+          {this.state.isDrawingMode ? '进入画图模式' : '进入只读模式'}
         </button>
-        <img src="" alt="" style={{ display: "none" }} id="hiddenImg" />
+        <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
         <a href="" id="downloadImage" download onClick={this.handleSaveImage}>
           下载图片
         </a>
