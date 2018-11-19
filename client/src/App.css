@@ -1,0 +1,32 @@
+.App {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvasContainer {
+  width: 100%;
+  margin: 50px 0;
+}
+
+.toolContainer {
+  width: 100%;
+}
+
+#MILL {
+  border: 1px solid black;
+}
+
+.add-margin-left-8 {
+  margin-left: 8px;
+}
+
+.add-margin-right-8 {
+  margin-right: 8px;
+}
+
+.input-file {
+  width: 200px;
+}
