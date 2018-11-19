@@ -4,11 +4,20 @@
   "description": "Platform and toolchain for labelling medical images.",
   "main": "index.js",
   "license": "MIT",
+  "bin": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dist": "./scripts/dist.sh"
+  },
   "dependencies": {
     "express": "^4.16.4",
     "opn": "^5.4.0"
   },
-  "scripts": {
-    "start": "node index.js"
+  "devDependencies": {
+    "pkg": "^4.3.4"
+  },
+  "pkg": {
+    "bin": "index.js",
+    "assets": "client/build/**/*"
   }
 }
