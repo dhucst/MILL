@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { fabric } from "fabric";
+import { Switch, Icon, Button } from "antd";
 
 import "./App.css";
+
+const BASE_WIDTH = 1680;
 
 class App extends Component {
   state = {
@@ -29,9 +32,10 @@ class App extends Component {
     tolerance: 5
   };
   componentDidMount() {
+    const actualWidth = window.screen.width;
     this.canvas = new fabric.Canvas("MILL", {
-      width: 502,
-      height: 500,
+      width: (actualWidth / BASE_WIDTH) * 500,
+      height: (actualWidth / BASE_WIDTH) * 500,
       backgroundColor: "#eee"
     });
 
@@ -354,14 +358,42 @@ class App extends Component {
             <canvas id="MILL" />
           </div>
           <div className="toolContainer">
-            <input type="file" onChange={this.handleChange} />
-            <button onClick={this.handleUndo}>撤销</button>
-            <button onClick={this.handleDelete}>删除标记</button>
-            <button onClick={this.handleToggleRead}>
-              {this.state.isDrawingMode ? "画图模式" : "只读模式"}
-            </button>
+            <Button
+              type="primary"
+              className="add-margin-left-8 add-margin-right-8"
+            >
+              <input
+                type="file"
+                onChange={this.handleChange}
+                className="input-file"
+              />
+              上传图片
+            </Button>
+            <Button
+              onClick={this.handleUndo}
+              className="add-margin-left-8 add-margin-right-8"
+            >
+              撤销
+            </Button>
+            <Button
+              onClick={this.handleDelete}
+              className="add-margin-left-8 add-margin-right-8"
+            >
+              删除标记
+            </Button>
+            <Switch
+              checkedChildren="画图模式"
+              unCheckedChildren="只读模式"
+              onClick={this.handleToggleRead}
+              className="add-margin-left-8 add-margin-right-8"
+            />
             <img src="" alt="" style={{ display: "none" }} id="hiddenImg" />
-            <a href="" id="downloadImage" onClick={this.handleSaveImage}>
+            <a
+              href=""
+              id="downloadImage"
+              onClick={this.handleSaveImage}
+              className="add-margin-left-8 add-margin-right-8"
+            >
               下载标注图
             </a>
           </div>
