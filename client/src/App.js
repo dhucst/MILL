@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
-import { Switch, Icon, Button } from 'antd';
+import { Switch, Button } from 'antd';
 
 import './App.css';
 
@@ -367,12 +367,14 @@ class App extends Component {
             </Button>
             <Button
               onClick={this.handleDelete}
+              disabled={this.state.isDrawingMode}
               className="add-margin-left-8 add-margin-right-8">
               删除标记
             </Button>
             <Switch
               checkedChildren="画图模式"
               unCheckedChildren="只读模式"
+              checked={this.state.isDrawingMode}
               onClick={this.handleToggleRead}
               className="add-margin-left-8 add-margin-right-8"
             />
