@@ -1,45 +1,45 @@
-import React, { Component } from 'react';
-import { fabric } from 'fabric';
+import React, { Component } from "react";
+import { fabric } from "fabric";
 
-import './App.css';
+import "./App.css";
 
 class App extends Component {
   state = {
-    isDrawingMode: false,
+    isDrawingMode: false
   };
   img = {
     width: 250,
     height: 250,
     leftTopPoint: {
       left: 0,
-      top: 0,
+      top: 0
     },
     rightTopPoint: {
       left: 0 + 500,
-      top: 0,
+      top: 0
     },
     leftBottomPoint: {
       left: 0,
-      top: 0 + 500,
+      top: 0 + 500
     },
     rightBottomPoint: {
       left: 0 + 500,
-      top: 0 + 500,
+      top: 0 + 500
     },
-    tolerance: 5,
+    tolerance: 5
   };
   componentDidMount() {
-    this.canvas = new fabric.Canvas('MILL', {
-      width: 500,
+    this.canvas = new fabric.Canvas("MILL", {
+      width: 502,
       height: 500,
-      backgroundColor: '#eee',
+      backgroundColor: "#eee"
     });
 
     this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-    this.canvas.freeDrawingBrush.color = '#0f0';
+    this.canvas.freeDrawingBrush.color = "#0f0";
 
     const that = this;
-    this.canvas.on('mouse:up', function(options) {
+    this.canvas.on("mouse:up", function(options) {
       console.log(that.canvas.getObjects());
       const len = that.canvas.getObjects().length;
 
@@ -49,10 +49,6 @@ class App extends Component {
       const pointLen = lastItem.path.length;
       const pathFirstPoint = lastItem.path[0];
       const pathLastPoint = lastItem.path[pointLen - 1];
-
-      // pre-close for drawing
-      lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
-      that.canvas.renderAll();
 
       /*
        * There are many circumstances need judge
@@ -71,50 +67,57 @@ class App extends Component {
       let y2 = that.img.leftTopPoint.top;
       let x3 = pathLastPoint[1];
       let y3 = pathLastPoint[2];
+
+      // handle two point let it into the image
+      const handledPathFirstPoint = {
+        left: x1,
+        top: y1
+      };
+      const handledPathLastPoint = {
+        left: x3,
+        top: y3
+      };
+
       if (
         Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) <=
           Math.pow(that.img.width, 2) &&
         Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
           Math.pow(that.img.width, 2)
       ) {
-        // handle two point let it into the image
-        const pathFirstPoint = {
-          left: x1 < x2 ? x2 : x1,
-          top: y1 < y2 ? y2 : y1,
-        };
-        const pathLastPoint = {
-          left: x3 < x2 ? x2 : x3,
-          top: y3 < y2 ? y2 : y3,
-        };
         const crossPoint = {
-          left: Math.min(pathFirstPoint.left, pathLastPoint.left),
-          top: Math.min(pathFirstPoint.top, pathLastPoint.top),
+          left: Math.min(handledPathFirstPoint.left, handledPathLastPoint.left),
+          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top)
         };
 
         // For convenient calculate
         let leftPoint = null;
         let rightPoint = null;
-        if (pathFirstPoint.left > pathLastPoint.left) {
-          leftPoint = pathLastPoint;
-          rightPoint = pathFirstPoint;
+        if (handledPathFirstPoint.left > handledPathLastPoint.left) {
+          leftPoint = handledPathLastPoint;
+          rightPoint = handledPathFirstPoint;
         } else {
-          leftPoint = pathFirstPoint;
-          rightPoint = pathLastPoint;
+          leftPoint = handledPathFirstPoint;
+          rightPoint = handledPathLastPoint;
         }
 
         // if vertical, is special circumstance, start drawing path and group path
         if (rightPoint.top - y2 <= 5 && leftPoint.left - x2 <= 5) {
-          const pathContent = `M ${pathFirstPoint.left} ${
-            pathFirstPoint.top
-          } L ${crossPoint.left} ${crossPoint.top} L ${pathLastPoint.left} ${
-            pathLastPoint.top
-          }`;
-          const newPath = new fabric.Path(pathContent);
-          newPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          const groupPath = new fabric.Group([newPath, lastItem]);
-          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          that.canvas.remove(lastItem);
-          that.canvas.add(groupPath);
+          const pathContentOne = [
+            "M",
+            handledPathFirstPoint.left,
+            handledPathFirstPoint.top
+          ];
+          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
+          const pathContentThree = [
+            "L",
+            handledPathLastPoint.left,
+            handledPathLastPoint.top
+          ];
+          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          that.canvas.renderAll();
+        } else {
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         }
 
@@ -133,44 +136,40 @@ class App extends Component {
         Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
           Math.pow(that.img.width, 2)
       ) {
-        // handle two point let it into the image
-        const pathFirstPoint = {
-          left: x1 > x2 ? x2 : x1,
-          top: y1 < y2 ? y2 : y1,
-        };
-        const pathLastPoint = {
-          left: x3 > x2 ? x2 : x3,
-          top: y3 < y2 ? y2 : y3,
-        };
         const crossPoint = {
-          left: Math.max(pathFirstPoint.left, pathLastPoint.left),
-          top: Math.min(pathFirstPoint.top, pathLastPoint.top),
+          left: Math.max(handledPathFirstPoint.left, handledPathLastPoint.left),
+          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top)
         };
 
         // For convenient calculate
         let leftPoint = null;
         let rightPoint = null;
-        if (pathFirstPoint.left > pathLastPoint.left) {
-          leftPoint = pathLastPoint;
-          rightPoint = pathFirstPoint;
+        if (handledPathFirstPoint.left > handledPathLastPoint.left) {
+          leftPoint = handledPathLastPoint;
+          rightPoint = handledPathFirstPoint;
         } else {
-          leftPoint = pathFirstPoint;
-          rightPoint = pathLastPoint;
+          leftPoint = handledPathFirstPoint;
+          rightPoint = handledPathLastPoint;
         }
 
         // if vertical, is special circumstance, start drawing path and group path
         if (leftPoint.top - y2 <= 5 && x2 - rightPoint.left <= 5) {
-          const pathContent = `M ${pathFirstPoint.left} ${
-            pathFirstPoint.top
-          } L ${crossPoint.left} ${crossPoint.top} L ${pathLastPoint.left} ${
-            pathLastPoint.top
-          }`;
-          const newPath = new fabric.Path(pathContent);
-          newPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          const groupPath = new fabric.Group([newPath, lastItem]);
-          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          that.canvas.remove(lastItem);
-          that.canvas.add(groupPath);
+          const pathContentOne = [
+            "M",
+            handledPathFirstPoint.left,
+            handledPathFirstPoint.top
+          ];
+          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
+          const pathContentThree = [
+            "L",
+            handledPathLastPoint.left,
+            handledPathLastPoint.top
+          ];
+          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          that.canvas.renderAll();
+        } else {
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         }
 
@@ -189,44 +188,40 @@ class App extends Component {
         Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
           Math.pow(that.img.width, 2)
       ) {
-        // handle two point let it into the image
-        const pathFirstPoint = {
-          left: x1 < x2 ? x2 : x1,
-          top: y1 > y2 ? y2 : y1,
-        };
-        const pathLastPoint = {
-          left: x3 < x2 ? x2 : x3,
-          top: y3 > y2 ? y2 : y3,
-        };
         const crossPoint = {
-          left: Math.min(pathFirstPoint.left, pathLastPoint.left),
-          top: Math.max(pathFirstPoint.top, pathLastPoint.top),
+          left: Math.min(handledPathFirstPoint.left, handledPathLastPoint.left),
+          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top)
         };
 
         // For convenient calculate
         let leftPoint = null;
         let rightPoint = null;
-        if (pathFirstPoint.left > pathLastPoint.left) {
-          leftPoint = pathLastPoint;
-          rightPoint = pathFirstPoint;
+        if (handledPathFirstPoint.left > handledPathLastPoint.left) {
+          leftPoint = handledPathLastPoint;
+          rightPoint = handledPathFirstPoint;
         } else {
-          leftPoint = pathFirstPoint;
-          rightPoint = pathLastPoint;
+          leftPoint = handledPathFirstPoint;
+          rightPoint = handledPathLastPoint;
         }
 
         // if vertical, is special circumstance, start drawing path and group path
         if (leftPoint.left - x2 <= 5 && y2 - rightPoint.top <= 5) {
-          const pathContent = `M ${pathFirstPoint.left} ${
-            pathFirstPoint.top
-          } L ${crossPoint.left} ${crossPoint.top} L ${pathLastPoint.left} ${
-            pathLastPoint.top
-          }`;
-          const newPath = new fabric.Path(pathContent);
-          newPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          const groupPath = new fabric.Group([newPath, lastItem]);
-          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          that.canvas.remove(lastItem);
-          that.canvas.add(groupPath);
+          const pathContentOne = [
+            "M",
+            handledPathFirstPoint.left,
+            handledPathFirstPoint.top
+          ];
+          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
+          const pathContentThree = [
+            "L",
+            handledPathLastPoint.left,
+            handledPathLastPoint.top
+          ];
+          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          that.canvas.renderAll();
+        } else {
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         }
 
@@ -245,49 +240,48 @@ class App extends Component {
         Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2) <=
           Math.pow(that.img.width, 2)
       ) {
-        // handle two point let it into the image
-        const pathFirstPoint = {
-          left: x1 > x2 ? x2 : x1,
-          top: y1 > y2 ? y2 : y1,
-        };
-        const pathLastPoint = {
-          left: x3 > x2 ? x2 : x3,
-          top: y3 > y2 ? y2 : y3,
-        };
         const crossPoint = {
-          left: Math.max(pathFirstPoint.left, pathLastPoint.left),
-          top: Math.max(pathFirstPoint.top, pathLastPoint.top),
+          left: Math.max(handledPathFirstPoint.left, handledPathLastPoint.left),
+          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top)
         };
 
         // For convenient calculate
         let leftPoint = null;
         let rightPoint = null;
-        if (pathFirstPoint.left > pathLastPoint.left) {
-          leftPoint = pathLastPoint;
-          rightPoint = pathFirstPoint;
+        if (handledPathFirstPoint.left > handledPathLastPoint.left) {
+          leftPoint = handledPathLastPoint;
+          rightPoint = handledPathFirstPoint;
         } else {
-          leftPoint = pathFirstPoint;
-          rightPoint = pathLastPoint;
+          leftPoint = handledPathFirstPoint;
+          rightPoint = handledPathLastPoint;
         }
 
         // if vertical, is special circumstance, start drawing path and group path
         if (y2 - leftPoint.top <= 5 && x2 - rightPoint.left <= 5) {
-          const pathContent = `M ${pathFirstPoint.left} ${
-            pathFirstPoint.top
-          } L ${crossPoint.left} ${crossPoint.top} L ${pathLastPoint.left} ${
-            pathLastPoint.top
-          }`;
-          const newPath = new fabric.Path(pathContent);
-          newPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          const groupPath = new fabric.Group([newPath, lastItem]);
-          groupPath.set('fill', 'rgba(0, 255, 0, 0.5)');
-          that.canvas.remove(lastItem);
-          that.canvas.add(groupPath);
+          const pathContentOne = [
+            "M",
+            handledPathFirstPoint.left,
+            handledPathFirstPoint.top
+          ];
+          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
+          const pathContentThree = [
+            "L",
+            handledPathLastPoint.left,
+            handledPathLastPoint.top
+          ];
+          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          that.canvas.renderAll();
+        } else {
+          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         }
 
         return;
       }
+
+      lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+      that.canvas.renderAll();
     });
   }
 
@@ -297,9 +291,9 @@ class App extends Component {
     this.filename = file.name;
 
     const reader = new FileReader();
-    const img = document.querySelector('img');
+    const img = document.querySelector("img");
 
-    reader.addEventListener('load', function() {
+    reader.addEventListener("load", function() {
       img.src = reader.result;
       img.onload = function() {
         const image = new fabric.Image(img);
@@ -307,7 +301,7 @@ class App extends Component {
       };
       that.canvas.isDrawingMode = true;
       that.setState({
-        isDrawingMode: true,
+        isDrawingMode: true
       });
     });
 
@@ -330,45 +324,38 @@ class App extends Component {
   handleToggleRead = () => {
     this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
     this.setState({
-      isDrawingMode: this.canvas.isDrawingMode,
+      isDrawingMode: this.canvas.isDrawingMode
     });
   };
 
   handleSaveImage = () => {
     this.canvas.setBackgroundImage(null);
-    this.canvas.setBackgroundColor('#000');
+    this.canvas.setBackgroundColor("#000");
     this.canvas.getObjects().forEach(obj => {
       if (obj._objects) {
-        obj.item(0).set('stroke', '#fff');
-        obj.item(0).set('fill', '#fff');
-        obj.item(1).set('stroke', '#fff');
-        obj.item(1).set('fill', '#fff');
+        obj.item(0).set("stroke", "#fff");
+        obj.item(0).set("fill", "#fff");
+        obj.item(1).set("stroke", "#fff");
+        obj.item(1).set("fill", "#fff");
       } else {
-        obj.set('stroke', '#fff');
-        obj.set('fill', '#fff');
+        obj.set("stroke", "#fff");
+        obj.set("fill", "#fff");
       }
     });
     const imageURL = this.canvas.toDataURL({
-      format: 'jpeg',
-      multiplier: 0.5,
+      format: "jpeg",
+      multiplier: 0.5
     });
-    const downloadImage = document.getElementById('downloadImage');
+    const downloadImage = document.getElementById("downloadImage");
     downloadImage.href = imageURL;
-    downloadImage.download = `${this.filename.split('.').slice(0, -1)[0]}_anno`;
+    downloadImage.download = `${this.filename.split(".").slice(0, -1)[0]}_anno`;
 
     // restore canvas
-    const imgDom = document.getElementById('hiddenImg');
+    const imgDom = document.getElementById("hiddenImg");
     const image = new fabric.Image(imgDom);
     this.canvas.getObjects().forEach(obj => {
-      if (obj._objects) {
-        obj.item(0).set('stroke', '#0f0');
-        obj.item(0).set('fill', 'rgba(0, 255, 0, 0.5)');
-        obj.item(1).set('stroke', '#0f0');
-        obj.item(1).set('fill', 'rgba(0, 255, 0, 0.5)');
-      } else {
-        obj.set('stroke', '#0f0');
-        obj.set('fill', 'rgba(0, 255, 0, 0.5)');
-      }
+      obj.set("stroke", "#0f0");
+      obj.set("fill", "rgba(0, 255, 0, 0.5)");
     });
 
     this.setBackground(image);
@@ -380,8 +367,8 @@ class App extends Component {
       this.canvas.renderAll.bind(this.canvas),
       {
         scaleX: this.canvas.getWidth() / this.img.width,
-        scaleY: this.canvas.getHeight() / this.img.height,
-      },
+        scaleY: this.canvas.getHeight() / this.img.height
+      }
     );
     this.canvas.renderAll();
   };
@@ -398,9 +385,9 @@ class App extends Component {
             <button onClick={this.handleUndo}>撤销</button>
             <button onClick={this.handleDelete}>删除标记</button>
             <button onClick={this.handleToggleRead}>
-              {this.state.isDrawingMode ? '画图模式' : '只读模式'}
+              {this.state.isDrawingMode ? "画图模式" : "只读模式"}
             </button>
-            <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
+            <img src="" alt="" style={{ display: "none" }} id="hiddenImg" />
             <a href="" id="downloadImage" onClick={this.handleSaveImage}>
               下载标注图
             </a>
