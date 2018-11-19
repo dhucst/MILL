@@ -102,18 +102,13 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (rightPoint.top - y2 <= 5 && leftPoint.left - x2 <= 5) {
-          const pathContentOne = [
-            "M",
+          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentTwo = [
+            "L",
             handledPathFirstPoint.left,
             handledPathFirstPoint.top
           ];
-          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
-          const pathContentThree = [
-            "L",
-            handledPathLastPoint.left,
-            handledPathLastPoint.top
-          ];
-          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.path.push(pathContentOne, pathContentTwo);
           lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         } else {
@@ -153,19 +148,14 @@ class App extends Component {
         }
 
         // if vertical, is special circumstance, start drawing path and group path
-        if (leftPoint.top - y2 <= 5 && x2 - rightPoint.left <= 5) {
-          const pathContentOne = [
-            "M",
+        if (leftPoint.top - y2 <= 1 && x2 - rightPoint.left <= 1) {
+          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentTwo = [
+            "L",
             handledPathFirstPoint.left,
             handledPathFirstPoint.top
           ];
-          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
-          const pathContentThree = [
-            "L",
-            handledPathLastPoint.left,
-            handledPathLastPoint.top
-          ];
-          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.path.push(pathContentOne, pathContentTwo);
           lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         } else {
@@ -206,18 +196,13 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (leftPoint.left - x2 <= 5 && y2 - rightPoint.top <= 5) {
-          const pathContentOne = [
-            "M",
+          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentTwo = [
+            "L",
             handledPathFirstPoint.left,
             handledPathFirstPoint.top
           ];
-          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
-          const pathContentThree = [
-            "L",
-            handledPathLastPoint.left,
-            handledPathLastPoint.top
-          ];
-          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.path.push(pathContentOne, pathContentTwo);
           lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         } else {
@@ -258,18 +243,13 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (y2 - leftPoint.top <= 5 && x2 - rightPoint.left <= 5) {
-          const pathContentOne = [
-            "M",
+          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentTwo = [
+            "L",
             handledPathFirstPoint.left,
             handledPathFirstPoint.top
           ];
-          const pathContentTwo = ["L", crossPoint.left, crossPoint.top];
-          const pathContentThree = [
-            "L",
-            handledPathLastPoint.left,
-            handledPathLastPoint.top
-          ];
-          lastItem.path.push(pathContentOne, pathContentTwo, pathContentThree);
+          lastItem.path.push(pathContentOne, pathContentTwo);
           lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
           that.canvas.renderAll();
         } else {
@@ -332,15 +312,8 @@ class App extends Component {
     this.canvas.setBackgroundImage(null);
     this.canvas.setBackgroundColor("#000");
     this.canvas.getObjects().forEach(obj => {
-      if (obj._objects) {
-        obj.item(0).set("stroke", "#fff");
-        obj.item(0).set("fill", "#fff");
-        obj.item(1).set("stroke", "#fff");
-        obj.item(1).set("fill", "#fff");
-      } else {
-        obj.set("stroke", "#fff");
-        obj.set("fill", "#fff");
-      }
+      obj.set("stroke", "#fff");
+      obj.set("fill", "#fff");
     });
     const imageURL = this.canvas.toDataURL({
       format: "jpeg",

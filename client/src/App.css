@@ -18,3 +18,11 @@
 #MILL {
   border: 1px solid black;
 }
+
+.add-margin-left-8 {
+  margin-left: 8px;
+}
+
+.add-margin-right-8 {
+  margin-right: 8px;
+}
