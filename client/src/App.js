@@ -295,9 +295,9 @@ class App extends Component {
     const that = this;
     const file = e.target.files[0];
     this.filename = file.name;
-    console.log(this.filename);
-    var reader = new FileReader();
-    var img = document.querySelector('img');
+
+    const reader = new FileReader();
+    const img = document.querySelector('img');
 
     reader.addEventListener('load', function() {
       img.src = reader.result;
@@ -306,6 +306,9 @@ class App extends Component {
         that.setBackground(image);
       };
       that.canvas.isDrawingMode = true;
+      that.setState({
+        isDrawingMode: true,
+      });
     });
 
     if (file) {
@@ -395,7 +398,7 @@ class App extends Component {
             <button onClick={this.handleUndo}>撤销</button>
             <button onClick={this.handleDelete}>删除标记</button>
             <button onClick={this.handleToggleRead}>
-              {this.state.isDrawingMode ? '进入画图模式' : '进入只读模式'}
+              {this.state.isDrawingMode ? '画图模式' : '只读模式'}
             </button>
             <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
             <a href="" id="downloadImage" onClick={this.handleSaveImage}>
