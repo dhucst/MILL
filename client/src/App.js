@@ -4,8 +4,6 @@ import { Switch, Icon, Button } from "antd";
 
 import "./App.css";
 
-const BASE_WIDTH = 1680;
-
 class App extends Component {
   state = {
     isDrawingMode: false
@@ -32,10 +30,9 @@ class App extends Component {
     tolerance: 5
   };
   componentDidMount() {
-    const actualWidth = window.screen.width;
     this.canvas = new fabric.Canvas("MILL", {
-      width: (actualWidth / BASE_WIDTH) * 500,
-      height: (actualWidth / BASE_WIDTH) * 500,
+      width: 500,
+      height: 500,
       backgroundColor: "#eee"
     });
 
