@@ -28,18 +28,5 @@
 }
 
 .input-file {
-  position: absolute;
-  font-size: 100px;
-  right: 0;
-  top: 0;
-  opacity: 0;
-  filter: alpha(opacity=0);
-  cursor: pointer;
-}
-
-.input-file:hover {
-  background: #aadffd;
-  border-color: #78c3f3;
-  color: #004974;
-  text-decoration: none;
+  width: 200px;
 }

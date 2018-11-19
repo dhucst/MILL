@@ -1,46 +1,46 @@
-import React, { Component } from "react";
-import { fabric } from "fabric";
-import { Switch, Icon, Button } from "antd";
+import React, { Component } from 'react';
+import { fabric } from 'fabric';
+import { Switch, Icon, Button } from 'antd';
 
-import "./App.css";
+import './App.css';
 
 class App extends Component {
   state = {
-    isDrawingMode: false
+    isDrawingMode: false,
   };
   img = {
     width: 250,
     height: 250,
     leftTopPoint: {
       left: 0,
-      top: 0
+      top: 0,
     },
     rightTopPoint: {
       left: 0 + 500,
-      top: 0
+      top: 0,
     },
     leftBottomPoint: {
       left: 0,
-      top: 0 + 500
+      top: 0 + 500,
     },
     rightBottomPoint: {
       left: 0 + 500,
-      top: 0 + 500
+      top: 0 + 500,
     },
-    tolerance: 5
+    tolerance: 5,
   };
   componentDidMount() {
-    this.canvas = new fabric.Canvas("MILL", {
+    this.canvas = new fabric.Canvas('MILL', {
       width: 500,
       height: 500,
-      backgroundColor: "#eee"
+      backgroundColor: '#eee',
     });
 
     this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-    this.canvas.freeDrawingBrush.color = "#0f0";
+    this.canvas.freeDrawingBrush.color = '#0f0';
 
     const that = this;
-    this.canvas.on("mouse:up", function(options) {
+    this.canvas.on('mouse:up', function(options) {
       console.log(that.canvas.getObjects());
       const len = that.canvas.getObjects().length;
 
@@ -72,11 +72,11 @@ class App extends Component {
       // handle two point let it into the image
       const handledPathFirstPoint = {
         left: x1,
-        top: y1
+        top: y1,
       };
       const handledPathLastPoint = {
         left: x3,
-        top: y3
+        top: y3,
       };
 
       if (
@@ -87,7 +87,7 @@ class App extends Component {
       ) {
         const crossPoint = {
           left: Math.min(handledPathFirstPoint.left, handledPathLastPoint.left),
-          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top)
+          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top),
         };
 
         // For convenient calculate
@@ -103,17 +103,17 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (rightPoint.top - y2 <= 5 && leftPoint.left - x2 <= 5) {
-          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentOne = ['L', crossPoint.left, crossPoint.top];
           const pathContentTwo = [
-            "L",
+            'L',
             handledPathFirstPoint.left,
-            handledPathFirstPoint.top
+            handledPathFirstPoint.top,
           ];
           lastItem.path.push(pathContentOne, pathContentTwo);
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         } else {
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         }
 
@@ -134,7 +134,7 @@ class App extends Component {
       ) {
         const crossPoint = {
           left: Math.max(handledPathFirstPoint.left, handledPathLastPoint.left),
-          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top)
+          top: Math.min(handledPathFirstPoint.top, handledPathLastPoint.top),
         };
 
         // For convenient calculate
@@ -150,17 +150,17 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (leftPoint.top - y2 <= 1 && x2 - rightPoint.left <= 1) {
-          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentOne = ['L', crossPoint.left, crossPoint.top];
           const pathContentTwo = [
-            "L",
+            'L',
             handledPathFirstPoint.left,
-            handledPathFirstPoint.top
+            handledPathFirstPoint.top,
           ];
           lastItem.path.push(pathContentOne, pathContentTwo);
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         } else {
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         }
 
@@ -181,7 +181,7 @@ class App extends Component {
       ) {
         const crossPoint = {
           left: Math.min(handledPathFirstPoint.left, handledPathLastPoint.left),
-          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top)
+          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top),
         };
 
         // For convenient calculate
@@ -197,17 +197,17 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (leftPoint.left - x2 <= 5 && y2 - rightPoint.top <= 5) {
-          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentOne = ['L', crossPoint.left, crossPoint.top];
           const pathContentTwo = [
-            "L",
+            'L',
             handledPathFirstPoint.left,
-            handledPathFirstPoint.top
+            handledPathFirstPoint.top,
           ];
           lastItem.path.push(pathContentOne, pathContentTwo);
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         } else {
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         }
 
@@ -228,7 +228,7 @@ class App extends Component {
       ) {
         const crossPoint = {
           left: Math.max(handledPathFirstPoint.left, handledPathLastPoint.left),
-          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top)
+          top: Math.max(handledPathFirstPoint.top, handledPathLastPoint.top),
         };
 
         // For convenient calculate
@@ -244,37 +244,37 @@ class App extends Component {
 
         // if vertical, is special circumstance, start drawing path and group path
         if (y2 - leftPoint.top <= 5 && x2 - rightPoint.left <= 5) {
-          const pathContentOne = ["L", crossPoint.left, crossPoint.top];
+          const pathContentOne = ['L', crossPoint.left, crossPoint.top];
           const pathContentTwo = [
-            "L",
+            'L',
             handledPathFirstPoint.left,
-            handledPathFirstPoint.top
+            handledPathFirstPoint.top,
           ];
           lastItem.path.push(pathContentOne, pathContentTwo);
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         } else {
-          lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+          lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
           that.canvas.renderAll();
         }
 
         return;
       }
 
-      lastItem.set("fill", "rgba(0, 255, 0, 0.5)");
+      lastItem.set('fill', 'rgba(0, 255, 0, 0.5)');
       that.canvas.renderAll();
     });
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     const that = this;
     const file = e.target.files[0];
     this.filename = file.name;
 
     const reader = new FileReader();
-    const img = document.querySelector("img");
+    const img = document.querySelector('img');
 
-    reader.addEventListener("load", function() {
+    reader.addEventListener('load', function() {
       img.src = reader.result;
       img.onload = function() {
         const image = new fabric.Image(img);
@@ -282,7 +282,7 @@ class App extends Component {
       };
       that.canvas.isDrawingMode = true;
       that.setState({
-        isDrawingMode: true
+        isDrawingMode: true,
       });
     });
 
@@ -305,44 +305,44 @@ class App extends Component {
   handleToggleRead = () => {
     this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
     this.setState({
-      isDrawingMode: this.canvas.isDrawingMode
+      isDrawingMode: this.canvas.isDrawingMode,
     });
   };
 
   handleSaveImage = () => {
     this.canvas.setBackgroundImage(null);
-    this.canvas.setBackgroundColor("#000");
-    this.canvas.getObjects().forEach(obj => {
-      obj.set("stroke", "#fff");
-      obj.set("fill", "#fff");
+    this.canvas.setBackgroundColor('#000');
+    this.canvas.getObjects().forEach((obj) => {
+      obj.set('stroke', '#fff');
+      obj.set('fill', '#fff');
     });
     const imageURL = this.canvas.toDataURL({
-      format: "jpeg",
-      multiplier: 0.5
+      format: 'jpeg',
+      multiplier: 0.5,
     });
-    const downloadImage = document.getElementById("downloadImage");
+    const downloadImage = document.getElementById('downloadImage');
     downloadImage.href = imageURL;
-    downloadImage.download = `${this.filename.split(".").slice(0, -1)[0]}_anno`;
+    downloadImage.download = `${this.filename.split('.').slice(0, -1)[0]}_anno`;
 
     // restore canvas
-    const imgDom = document.getElementById("hiddenImg");
+    const imgDom = document.getElementById('hiddenImg');
     const image = new fabric.Image(imgDom);
-    this.canvas.getObjects().forEach(obj => {
-      obj.set("stroke", "#0f0");
-      obj.set("fill", "rgba(0, 255, 0, 0.5)");
+    this.canvas.getObjects().forEach((obj) => {
+      obj.set('stroke', '#0f0');
+      obj.set('fill', 'rgba(0, 255, 0, 0.5)');
     });
 
     this.setBackground(image);
   };
 
-  setBackground = image => {
+  setBackground = (image) => {
     this.canvas.setBackgroundImage(
       image,
       this.canvas.renderAll.bind(this.canvas),
       {
         scaleX: this.canvas.getWidth() / this.img.width,
-        scaleY: this.canvas.getHeight() / this.img.height
-      }
+        scaleY: this.canvas.getHeight() / this.img.height,
+      },
     );
     this.canvas.renderAll();
   };
@@ -355,27 +355,19 @@ class App extends Component {
             <canvas id="MILL" />
           </div>
           <div className="toolContainer">
-            <Button
-              type="primary"
-              className="add-margin-left-8 add-margin-right-8"
-            >
-              <input
-                type="file"
-                onChange={this.handleChange}
-                className="input-file"
-              />
-              上传图片
-            </Button>
+            <input
+              type="file"
+              onChange={this.handleChange}
+              className="input-file"
+            />
             <Button
               onClick={this.handleUndo}
-              className="add-margin-left-8 add-margin-right-8"
-            >
+              className="add-margin-left-8 add-margin-right-8">
               撤销
             </Button>
             <Button
               onClick={this.handleDelete}
-              className="add-margin-left-8 add-margin-right-8"
-            >
+              className="add-margin-left-8 add-margin-right-8">
               删除标记
             </Button>
             <Switch
@@ -384,13 +376,12 @@ class App extends Component {
               onClick={this.handleToggleRead}
               className="add-margin-left-8 add-margin-right-8"
             />
-            <img src="" alt="" style={{ display: "none" }} id="hiddenImg" />
+            <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
             <a
               href=""
               id="downloadImage"
               onClick={this.handleSaveImage}
-              className="add-margin-left-8 add-margin-right-8"
-            >
+              className="add-margin-left-8 add-margin-right-8">
               下载标注图
             </a>
           </div>
