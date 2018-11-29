@@ -270,12 +270,25 @@ class App extends Component {
     const that = this;
     const file = e.target.files[0];
     this.filename = file.name;
-
     const reader = new FileReader();
-    const img = document.querySelector('img');
 
-    reader.addEventListener('load', function() {
-      img.src = reader.result;
+    // read from json file
+    function readJSON(event) {
+      const obj = event.target.result;
+      that.canvas.loadFromJSON(obj);
+      return;
+    }
+
+    if (this.filename.endsWith('.json')) {
+      reader.readAsText(file);
+      reader.onload = readJSON;
+      return;
+    }
+
+    // read from background image
+    const img = document.querySelector('img');
+    function readBackgroundImgae(event) {
+      img.src = event.target.result;
       img.onload = function() {
         const image = new fabric.Image(img);
         that.setBackground(image);
@@ -284,10 +297,15 @@ class App extends Component {
       that.setState({
         isDrawingMode: true,
       });
-    });
+    }
 
-    if (file) {
+    if (
+      this.filename.endsWith('.jpg') ||
+      this.filename.endsWith('.png') ||
+      this.filename.endsWith('.jpeg')
+    ) {
       reader.readAsDataURL(file);
+      reader.onload = readBackgroundImgae;
     }
   };
 
@@ -347,6 +365,17 @@ class App extends Component {
     this.canvas.renderAll();
   };
 
+  handleSaveJSONCode = () => {
+    const imageObject = this.canvas.toJSON();
+    const data =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(imageObject));
+
+    const downloadJSON = document.getElementById('downloadJSON');
+    downloadJSON.href = data;
+    downloadJSON.download = `data.json`;
+  };
+
   render() {
     return (
       <div className="App">
@@ -385,6 +414,13 @@ class App extends Component {
               onClick={this.handleSaveImage}
               className="add-margin-left-8 add-margin-right-8">
               下载标注图
+            </a>
+            <a
+              href=""
+              id="downloadJSON"
+              onClick={this.handleSaveJSONCode}
+              className="add-margin-left-8 add-margin-right-8">
+              下载标注代码
             </a>
           </div>
         </div>
