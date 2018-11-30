@@ -373,7 +373,7 @@ class App extends Component {
 
     const downloadJSON = document.getElementById('downloadJSON');
     downloadJSON.href = data;
-    downloadJSON.download = `data.json`;
+    downloadJSON.download = `${this.filename.split('.').slice(0, -1)[0]}.json`;
   };
 
   render() {
@@ -420,7 +420,7 @@ class App extends Component {
               id="downloadJSON"
               onClick={this.handleSaveJSONCode}
               className="add-margin-left-8 add-margin-right-8">
-              下载标注代码
+              下载标注代码文件
             </a>
           </div>
         </div>
