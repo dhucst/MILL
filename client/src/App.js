@@ -9,6 +9,8 @@ class App extends Component {
     isDrawingMode: false,
   };
   img = {
+    origWidth: 250,
+    origHeight: 250,
     width: 250,
     height: 250,
     leftTopPoint: {
@@ -295,6 +297,8 @@ class App extends Component {
       img.src = event.target.result;
       img.onload = function() {
         const image = new fabric.Image(img);
+        that.img.origWidth = img.width;
+        that.img.origHeight = img.height;
         that.setBackground(image);
       };
       that.canvas.isDrawingMode = true;
@@ -340,7 +344,7 @@ class App extends Component {
     });
     const imageURL = this.canvas.toDataURL({
       format: 'jpeg',
-      multiplier: 0.5,
+      multiplier: this.img.origWidth / this.canvas.getWidth(),
     });
     const downloadImage = document.getElementById('downloadImage');
     downloadImage.href = imageURL;
@@ -362,8 +366,8 @@ class App extends Component {
       image,
       this.canvas.renderAll.bind(this.canvas),
       {
-        scaleX: this.canvas.getWidth() / this.img.width,
-        scaleY: this.canvas.getHeight() / this.img.height,
+        scaleX: this.canvas.getWidth() / this.img.origWidth,
+        scaleY: this.canvas.getHeight() / this.img.origHeight,
       },
     );
     this.canvas.renderAll();
