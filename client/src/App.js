@@ -282,6 +282,10 @@ class App extends Component {
     if (this.filename.endsWith('.json')) {
       reader.readAsText(file);
       reader.onload = readJSON;
+      that.canvas.isDrawingMode = true;
+      that.setState({
+        isDrawingMode: true,
+      });
       return;
     }
 
@@ -380,15 +384,18 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <div className="canvasContainer">
-            <canvas id="MILL" />
-          </div>
           <div className="toolContainer">
+            <label>选择图像或 JSON 标注代码： </label>
             <input
               type="file"
               onChange={this.handleChange}
               className="input-file"
             />
+          </div>
+          <div className="canvasContainer">
+            <canvas id="MILL" />
+          </div>
+          <div className="toolContainer">
             <Button
               onClick={this.handleUndo}
               className="add-margin-left-8 add-margin-right-8">
