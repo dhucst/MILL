@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { Switch, Button } from 'antd';
+import keydown from 'react-keydown';
 
 import './App.css';
 
@@ -317,16 +318,18 @@ class App extends Component {
     }
   };
 
-  handleUndo = () => {
+  @keydown('ctrl+z', 'command+z')
+  handleUndo() {
     const len = this.canvas.getObjects().length;
     const lastItem = this.canvas.item(len - 1);
     this.canvas.remove(lastItem);
-  };
+  }
 
-  handleDelete = () => {
+  @keydown('backspace')
+  handleDelete() {
     const activeItem = this.canvas.getActiveObject();
     this.canvas.remove(activeItem);
-  };
+  }
 
   handleToggleRead = () => {
     this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
