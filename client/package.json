@@ -5,9 +5,11 @@
   "dependencies": {
     "antd": "^3.10.7",
     "fabric": "^2.4.3",
+    "file-saver": "^2.0.0",
     "react": "^16.6.3",
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.6.3",
+    "react-keydown": "^1.9.7",
     "react-scripts": "2.1.1"
   },
   "scripts": {
@@ -26,6 +28,19 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.6",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "babel-plugin-import": "^1.11.0"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-syntax-dynamic-import",
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ]
+    ]
   }
 }
