@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fabric } from 'fabric';
 import { Switch, Button } from 'antd';
 import keydown from 'react-keydown';
+import FileSaver from 'file-saver';
 
 import './App.css';
 
@@ -311,7 +312,8 @@ class App extends Component {
     if (
       this.filename.endsWith('.jpg') ||
       this.filename.endsWith('.png') ||
-      this.filename.endsWith('.jpeg')
+      this.filename.endsWith('.jpeg') ||
+      this.filename.endsWith('.JPG')
     ) {
       reader.readAsDataURL(file);
       reader.onload = readBackgroundImgae;
@@ -349,9 +351,11 @@ class App extends Component {
       format: 'jpeg',
       multiplier: this.img.origWidth / this.canvas.getWidth(),
     });
-    const downloadImage = document.getElementById('downloadImage');
-    downloadImage.href = imageURL;
-    downloadImage.download = `${this.filename.split('.').slice(0, -1)[0]}_anno`;
+
+    FileSaver.saveAs(
+      imageURL,
+      `${this.filename.split('.').slice(0, -1)[0]}_anno`,
+    );
 
     // restore canvas
     const imgDom = document.getElementById('hiddenImg');
@@ -377,14 +381,11 @@ class App extends Component {
   };
 
   handleSaveJSONCode = () => {
-    const imageObject = this.canvas.toJSON();
-    const data =
-      'data:text/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(imageObject));
-
-    const downloadJSON = document.getElementById('downloadJSON');
-    downloadJSON.href = data;
-    downloadJSON.download = `${this.filename.split('.').slice(0, -1)[0]}.json`;
+    const data = this.canvas.toJSON();
+    const blob = new Blob([JSON.stringify(data)], {
+      type: 'text/json;charset=utf-8',
+    });
+    FileSaver.saveAs(blob, `${this.filename.split('.').slice(0, -1)[0]}.json`);
   };
 
   render() {
@@ -422,20 +423,16 @@ class App extends Component {
               className="add-margin-left-8 add-margin-right-8"
             />
             <img src="" alt="" style={{ display: 'none' }} id="hiddenImg" />
-            <a
-              href=""
-              id="downloadImage"
+            <Button
               onClick={this.handleSaveImage}
               className="add-margin-left-8 add-margin-right-8">
               下载标注图
-            </a>
-            <a
-              href=""
-              id="downloadJSON"
+            </Button>
+            <Button
               onClick={this.handleSaveJSONCode}
               className="add-margin-left-8 add-margin-right-8">
               下载标注代码文件
-            </a>
+            </Button>
           </div>
         </div>
       </div>

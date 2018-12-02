@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.10.7",
     "fabric": "^2.4.3",
+    "file-saver": "^2.0.0",
     "react": "^16.6.3",
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.6.3",
