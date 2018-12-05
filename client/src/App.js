@@ -271,6 +271,9 @@ class App extends Component {
   }
 
   handleChange = (e) => {
+    // We need clear all label when new image is uploaded
+    this.canvas.clear();
+
     const that = this;
     const file = e.target.files[0];
     this.filename = file.name;
